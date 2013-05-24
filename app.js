@@ -38,6 +38,7 @@ var app = {
         if (err) 
           throw err;
           
+        app.dictSrc = data.toString();
         var dictSlice = app.dictSrc.substr(0,20055);
         var dictArray = app.dictSrc.split(/[\n\r]+/);
         app.log(dictArray.slice(0,18), ' * dictArray.length: '+dictArray.length + ':\n');
