@@ -83,13 +83,13 @@ var app = {
             doc2 = {mykey:2, docs:[{doc1:1}]},
             doc3 = {mykey:3, fieldtoupdate:10};
         app.log('4. inserting doc');
-        collection.insert(doc3, {safe:true}, this);
+        collection.insert(doc, {safe:true}, this);
         // this();
       },
       // 5. update
       function(err, result) {
         app.log('5. updating field')
-        app.collection.update({mykey:3}, {$set:{fieldtoupdate:205}}, {multi: true, safe: true}, this);
+        app.collection.update({mykey:3}, {$set:{fieldtoupdate:308}}, {multi: true, safe: true}, this);
       },
       
       // 6. 
