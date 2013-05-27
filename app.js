@@ -25,7 +25,7 @@ var app = {
   
   init: function() {
     this.loadDict();
-    this.storeSeq();
+    this.storeSeq(); // 'mongodb://user:pass@ds061807.mongolab.com:61807/nockmarket'
   },
   
   loadDict: function(){
@@ -46,14 +46,14 @@ var app = {
     );
   },
   
-  storeSeq: function(){
+  storeSeq: function(connQuery){
     flow.exec(
       // 1. connection to DB
       function(){
         app.log('1. flow started');
         var $ = app, 
-          connQuery = 'mongodb://' + $.cfg.dbHost + ':' + $.cfg.dbPort + '/' + $.cfg.dbName,
-          MongoClient = mongo.MongoClient;
+            MongoClient = mongo.MongoClient;
+        connQuery = connQuery || 'mongodb://' + $.cfg.dbHost + ':' + $.cfg.dbPort + '/' + $.cfg.dbName;
         app.log(' * ' + connQuery);
         MongoClient.connect(connQuery, this);  
       },
@@ -83,13 +83,13 @@ var app = {
             doc2 = {mykey:2, docs:[{doc1:1}]},
             doc3 = {mykey:3, fieldtoupdate:10};
         app.log('4. inserting doc');
-        collection.insert(doc3, this);
+        collection.insert(doc3, {safe:true}, this);
         // this();
       },
       // 5. update
       function(err, result) {
         app.log('5. updating field')
-        app.collection.update({mykey:1}, {$set:{fieldtoupdate:205}}, this);
+        app.collection.update({mykey:3}, {$set:{fieldtoupdate:205}}, {multi: true, safe: true}, this);
       },
       
       // 6. 
