@@ -1,5 +1,4 @@
 var mongo = require('mongodb'),
-    Server = mongo.Server,
     Db = mongo.Db,
     util = require('util'),
     plugn = require('./lib/plugn.js'),
@@ -19,13 +18,12 @@ var app = {
     dbName: 'mgbone',
     dbHost: 'localhost',
     dbPort: 27017,
-    dbCollName: 'test',
-    srcFileName: '.\data\dict\english.txt'
+    dbCollName: 'test'
   },
   
   init: function() {
     this.loadDict();
-    this.storeSeq(); // 'mongodb://user:pass@ds061807.mongolab.com:61807/nockmarket'
+    this.storeSeq(); 
   },
   
   loadDict: function(){
@@ -39,23 +37,30 @@ var app = {
           throw err;
           
         app.dictSrc = data.toString();
-        var dictSlice = app.dictSrc.substr(0,20055);
+        // var dictSlice = app.dictSrc.substr(0,20055);
         var dictArray = app.dictSrc.split(/[\n\r]+/);
         app.log(dictArray.slice(0,18), ' * dictArray.length: '+dictArray.length + ':\n');
       }
     );
   },
   
-  storeSeq: function(connQuery){
+  storeSeq: function(){
     flow.exec(
+      // 0. read db config
+      function() {
+        fs.readFile(__dirname + '/conf.db.txt', this);
+      }, 
       // 1. connection to DB
-      function(){
+      function (err, confDB) {
+        if (err) 
+          throw err;
+          
         app.log('1. flow started');
         var $ = app, 
             MongoClient = mongo.MongoClient;
-        connQuery = connQuery || 'mongodb://' + $.cfg.dbHost + ':' + $.cfg.dbPort + '/' + $.cfg.dbName;
-        app.log(' * ' + connQuery);
-        MongoClient.connect(connQuery, this);  
+        confDB = confDB.toString() || 'mongodb://' + $.cfg.dbHost + ':' + $.cfg.dbPort + '/' + $.cfg.dbName;
+        app.log(' * ' + confDB);
+        MongoClient.connect(confDB, this);  
       },
       
       // 2. if connection is OK, open a collection in DB
