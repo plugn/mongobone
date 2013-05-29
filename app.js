@@ -2,9 +2,14 @@ var mongo = require('mongodb'),
     Db = mongo.Db,
     util = require('util'),
     plugn = require('./lib/plugn.js'),
+    dbsync = require('./lib/dbsync.js'),
     flow = require('flow'),
-    fs = require('fs');
-  
+    fs = require('fs'),
+    express = require('express');
+    
+var exp = express();
+exp.use(express.static(__dirname + '/public'));  
+exp.listen(3210);
   
 var app = {
   log: function(){
@@ -23,7 +28,8 @@ var app = {
   
   init: function() {
     this.loadDict();
-    this.storeSeq(); 
+    dbsync()();
+    // this.storeSeq(); 
   },
   
   loadDict: function(){
